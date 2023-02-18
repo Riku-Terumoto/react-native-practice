@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import {
-  View, StyleSheet, TextInput,
+  View, StyleSheet, TextInput, Alert,
 } from 'react-native';
 import firebase from 'firebase';
 
 import CircleButton from '../components/CircleButton';
 import KeyboardSafeView from '../components/KeyboardSafeView';
+import { translateErrors } from '../utils';
 
 export default function MemoCreateScreen(props) {
   const { navigation } = props;
@@ -13,17 +14,16 @@ export default function MemoCreateScreen(props) {
 
   const handlePress = () => {
     const { currentUser } = firebase.auth();
-    console.log(currentUser);
     const db = firebase.firestore();
     const ref = db.collection(`users/${currentUser.uid}/memos`);
     ref.add({
       bodyText,
       updatedAt: new Date(),
-    }).then((docRef) => {
-      console.log('Created!', docRef.id);
+    }).then(() => {
       navigation.goBack();
-    }).catch((e) => {
-      console.log('Error!', e);
+    }).catch((error) => {
+      const errorMsg = translateErrors(error.code);
+      Alert.alert(errorMsg.title, errorMsg.description);
     });
   };
   return (
