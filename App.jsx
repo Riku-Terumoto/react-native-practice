@@ -19,7 +19,9 @@ if (firebase.apps.length === 0) {
 }
 
 const Stack = createStackNavigator();
+// Ignore log notification by message:
 LogBox.ignoreLogs(['Setting a timer']);
+LogBox.ignoreLogs(['AsyncStorage has been extracted', 'EventEmitter.removeListener']);
 export default function App() {
   return (
     <NavigationContainer>
